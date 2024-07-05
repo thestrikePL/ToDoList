@@ -1,0 +1,58 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SimpleToDoList.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="400" Height="600" Padding="10"
+        Background="White"
+        x:Class="SimpleToDoList.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="To Do List">
+
+	<Design.DataContext>
+		<vm:MainViewModel />
+	</Design.DataContext>
+
+	<Grid RowDefinitions="Auto, *, Auto"
+          ColumnDefinitions="*, Auto"
+          x:Name="Root">
+
+		<TextBlock Grid.Column="0" Grid.Row="0" Text="To Do List" FontSize="24" FontWeight="Bold" Foreground="Black" Margin="0,0,0,10" />
+
+		<ScrollViewer Grid.Row="1" Grid.ColumnSpan="2">
+			<ItemsControl ItemsSource="{Binding ToDoItems}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate DataType="vm:ToDoItemViewModel">
+						<Grid ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+							<CheckBox IsChecked="{Binding IsChecked}"
+                                      Content="{Binding Content}"
+                                      VerticalAlignment="Center"
+                                      Foreground="Black" />
+							<Button Grid.Column="1"
+                                    Command="{Binding #Root.((vm:MainViewModel)DataContext).RemoveItemCommand}"
+                                    CommandParameter="{Binding .}"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Foreground="Red">
+								Usuń
+							</Button>
+						</Grid>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+
+		<TextBox Grid.Row="2" Grid.Column="0" Text="{Binding NewItemContent}" Watermark="Dodaj nowe zadanie" Margin="0,10,10,0" HorizontalAlignment="Stretch" Foreground="Black" Background="White" BorderBrush="Red" BorderThickness="2" FontSize="16" Height="40">
+			<TextBox.KeyBindings>
+				<KeyBinding Gesture="Enter" Command="{Binding AddItemCommand}" />
+			</TextBox.KeyBindings>
+		</TextBox>
+
+		<Button Grid.Row="2" Grid.Column="1" Command="{Binding AddItemCommand}" Background="Green" Foreground="White" Padding="10,0" Margin="0,10,0,0" FontSize="16" BorderThickness="0" CornerRadius="5">
+			Dodaj
+		</Button>
+	</Grid>
+
+</Window>
